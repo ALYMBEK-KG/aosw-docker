@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+# But not these files
+!.gitignore
+!.env.example
+!LICENSE
+!README.md
+!docker-compose.yml
+!run.sh

@@ -1,0 +1,35 @@
+version: "3.4"
+
+volumes:
+  db:
+    driver: local
+
+services:
+  db:
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - 5434:5432
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/postgresql/data
+  app:
+    image: aosw-docker/app
+    restart: always
+    ports:
+      - 8084:8080
+    env_file:
+      - .env
+    volumes:
+      - ~/.gradle:/root/.gradle
+      - ./open-suite-webapp:/usr/src/axelor
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM adoptopenjdk/openjdk11:alpine
+        WORKDIR /usr/src/axelor
+        EXPOSE 8080
+        CMD ["./gradlew", "--no-daemon", "run"]
